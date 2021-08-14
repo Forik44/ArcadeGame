@@ -34,7 +34,17 @@ protected:
 	bool CanBeDamagedBP();
 	bool CanBeDamagedBP_Implementation();
 
+	UFUNCTION(BlueprintNativeEvent, Category = "Healths")
+	void ExplodePawn();
+	void ExplodePawn_Implementation();
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Healths")	
+	void RecoverPawn();
+	void RecoverPawn_Implementation();
+
 	FVector2D MoveLimit;
+
+	FTimerHandle RecoverTimer;
 private:
 
 	FVector2D TouchLocation;
@@ -64,6 +74,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Controls")
 	float TouchMoveSensability;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Controls")
+	float RecoverTime;
 
 	void IgnoreProjectile(AShootProjectile* Projectile);
 

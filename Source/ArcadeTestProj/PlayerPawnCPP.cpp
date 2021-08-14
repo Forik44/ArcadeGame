@@ -2,9 +2,13 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/PlayerController.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 
 APlayerPawnCPP::APlayerPawnCPP()
+	:
+	RecoverTime(2)
 {
 	TouchMoveSensability = 1.f;
 	MoveLimit.X = 500.f; MoveLimit.Y = 600.f;
@@ -33,6 +37,21 @@ bool APlayerPawnCPP::CanBeDamagedBP_Implementation()
 	return CanBeDamaged();
 }
 
+void APlayerPawnCPP::RecoverPawn_Implementation()
+{
+	ShootComponent->StartShooting();
+	SetActorEnableCollision(true);
+}
+
+void APlayerPawnCPP::ExplodePawn_Implementation()
+{
+	SetActorEnableCollision(false);
+
+	ShootComponent->StopShooting();
+
+	GetWorld()->GetTimerManager().SetTimer(RecoverTimer, this, &APlayerPawnCPP::RecoverPawn, RecoverTime, false);
+}
+
 void APlayerPawnCPP::BeginPlay()
 {
 	Super::BeginPlay();
@@ -42,10 +61,7 @@ void APlayerPawnCPP::BeginPlay()
 
 float APlayerPawnCPP::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	if (!CanBeDamagedBP())
-	{
-		return 0.f;
-	}
+	ExplodePawn();
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	return DamageAmount;
 }
