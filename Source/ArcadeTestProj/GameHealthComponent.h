@@ -25,6 +25,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Game Health")
 	int Healths;
 
+	UFUNCTION()
+	void OnPlayerDamaged(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatorOwn, AActor* DamageCauser);
 public:	
 	
 	UFUNCTION(BlueprintCallable, Category = "Game Health")

@@ -22,19 +22,18 @@ AShootProjectile::AShootProjectile()
 	Mesh->SetupAttachment(GetRootComponent());
 	Mesh->SetCollisionProfileName("NoCollision");
 
-
-	
 }
 
 // Called when the game starts or when spawned
 void AShootProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	Collision->OnComponentBeginOverlap.AddDynamic(this, &AShootProjectile::OnProjectileOverlap);
 	if (GetOwner())
 	{
 		Collision->IgnoreActorWhenMoving(GetOwner(), true);
+		
 	}
 }
 
@@ -60,7 +59,7 @@ void AShootProjectile::OnProjectileOverlap(UPrimitiveComponent* OpelappedComp, A
 void AShootProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	AddActorLocalOffset(FVector(ProjectileSpeed*DeltaTime,0.f,0.f));
 }
 

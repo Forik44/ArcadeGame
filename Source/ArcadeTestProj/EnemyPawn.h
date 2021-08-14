@@ -25,6 +25,9 @@ protected:
 	UFUNCTION()
 	void DestroyPawn();
 
+	UFUNCTION()
+	void OnEnemyOverlap(AActor* OverlappedActor, AActor* OtherActor);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -44,4 +47,5 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	UHealthComponent* HealthComponent;
 
+	void IgnoreProjectile(AShootProjectile* Projectile, AActor* Owner);
 };

@@ -1,6 +1,11 @@
 #include "ShootComponent.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "GameFramework/Pawn.h"
+#include "Kismet/GameplayStatics.h"
+#include "PlayerPawnCPP.h"
+#include "EnemyPawn.h"
+
 
 UShootComponent::UShootComponent()
 {
@@ -32,6 +37,18 @@ void UShootComponent::Shoot()
 
 
 		AShootProjectile* Projectile = GetWorld()->SpawnActor<AShootProjectile>(ShootInfo.ProjectileClass, SpawnLocation, SpawnRotation, SpawnParametrs);
+		if (UGameplayStatics::GetPlayerPawn(this, 0) == GetOwner())
+		{
+			APlayerPawnCPP* Player = Cast<APlayerPawnCPP>(GetOwner());
+			Player->IgnoreProjectile(Projectile);
+		}
+		else
+		{
+			AEnemyPawn* Enemy = Cast<AEnemyPawn>(GetOwner());
+			Enemy->IgnoreProjectile(Projectile, GetOwner());
+		}
+
+		
 		if (Projectile)
 		{
 			Projectile->Damage = ShootInfo.Damage;

@@ -8,15 +8,16 @@
 #include "GameHealthComponent.h"
 #include "ArcadeTestProjGameModeBase.generated.h"
 
-/**
- * 
- */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameOverEvent);
+
 UCLASS()
 class ARCADETESTPROJ_API AArcadeTestProjGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
 	AArcadeTestProjGameModeBase();
+
+	virtual void BeginPlay() override;
 
 public:
 
@@ -25,4 +26,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Health")
 	UGameHealthComponent* HealtsComponents;
+
+	UPROPERTY(BlueprintAssignable, Category = "Game")
+	FGameOverEvent GameOver;
+
+	UFUNCTION(BlueprintCallable, Category = "Game")
+	void EndGame();
 };

@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "Camera/CameraComponent.h"
 #include "ShootComponent.h"
+#include "ShootProjectile.h"
 #include "PlayerPawnCPP.generated.h"
 
 
@@ -33,8 +34,9 @@ private:
 	FVector2D TouchLocation;
 
 	bool Touching; 
-
+	
 public:	
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -56,6 +58,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Controls")
 	float TouchMoveSensability;
+
+	void IgnoreProjectile(AShootProjectile* Projectile);
 
 	
 };

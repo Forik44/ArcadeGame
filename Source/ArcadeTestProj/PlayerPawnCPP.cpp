@@ -3,6 +3,7 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/PlayerController.h"
 
+
 APlayerPawnCPP::APlayerPawnCPP()
 {
 	TouchMoveSensability = 1.f;
@@ -31,7 +32,12 @@ void APlayerPawnCPP::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	
+}
 
+void APlayerPawnCPP::IgnoreProjectile(AShootProjectile* Projectile)
+{
+	PawnCollision->IgnoreActorWhenMoving(Projectile, true);
 }
 
 void APlayerPawnCPP::Tick(float DeltaTime)
