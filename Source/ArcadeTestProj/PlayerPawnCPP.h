@@ -22,11 +22,17 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
 	void OnTouchPress(ETouchIndex::Type FingerIndex, FVector Location);
 	void OnTouchMove(ETouchIndex::Type FingerIndex, FVector Location);
 
 	APlayerController* PlayerController;
 	virtual void PossessedBy(AController* NewController) override;
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Healths")
+	bool CanBeDamagedBP();
+	bool CanBeDamagedBP_Implementation();
 
 	FVector2D MoveLimit;
 private:
@@ -61,5 +67,4 @@ public:
 
 	void IgnoreProjectile(AShootProjectile* Projectile);
 
-	
 };

@@ -28,11 +28,26 @@ void APlayerPawnCPP::PossessedBy(AController* NewController)
 	PlayerController = Cast<APlayerController>(NewController);
 }
 
+bool APlayerPawnCPP::CanBeDamagedBP_Implementation()
+{
+	return CanBeDamaged();
+}
+
 void APlayerPawnCPP::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	
+}
+
+float APlayerPawnCPP::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if (!CanBeDamagedBP())
+	{
+		return 0.f;
+	}
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	return DamageAmount;
 }
 
 void APlayerPawnCPP::IgnoreProjectile(AShootProjectile* Projectile)
