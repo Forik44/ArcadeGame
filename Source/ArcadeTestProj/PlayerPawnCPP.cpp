@@ -6,6 +6,7 @@
 #include "TimerManager.h"
 
 
+
 APlayerPawnCPP::APlayerPawnCPP()
 {
 	TouchMoveSensability = 1.f;
@@ -39,6 +40,7 @@ void APlayerPawnCPP::RecoverPawn_Implementation()
 {
 	ShootComponent->StartShooting();
 	SetActorEnableCollision(true);
+	PawnMesh->SetMaterial(0, PawnMaterial);
 }
 
 void APlayerPawnCPP::ExplodePawn_Implementation()
@@ -47,13 +49,14 @@ void APlayerPawnCPP::ExplodePawn_Implementation()
 
 	ShootComponent->StopShooting();
 
+	PawnMesh->SetMaterial(0, RecoverMaterial);
 }
 
 void APlayerPawnCPP::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	
+	PawnMaterial = PawnMesh->GetMaterial(0);
 }
 
 float APlayerPawnCPP::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)

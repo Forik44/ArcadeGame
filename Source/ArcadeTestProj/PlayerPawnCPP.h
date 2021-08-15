@@ -38,6 +38,8 @@ private:
 	FVector2D TouchLocation;
 
 	bool Touching; 
+
+	UMaterialInterface* PawnMaterial;
 	
 public:	
 
@@ -64,7 +66,10 @@ public:
 	float TouchMoveSensability;
 
 	UPROPERTY(BlueprintAssignable, Category = "Healths")
-	FPawnDamagedEvent PawnDamaged; 
+	FPawnDamagedEvent PawnDamaged;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pawn")
+	UMaterialInterface* RecoverMaterial;
 
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent, Category = "Healths")
 	bool CanBeDamagedBP();

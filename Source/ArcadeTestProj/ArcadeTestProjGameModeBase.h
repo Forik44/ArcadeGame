@@ -33,6 +33,7 @@ protected:
 
 	FTimerHandle RecoverTimer;
 
+	bool IsGameOver;
 public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemies")

@@ -38,6 +38,8 @@ protected:
 	FEnemySpawnInfo SpawnStage;
 	int EnemiesSpawned;
 
+	virtual void Deactivate() override;
+
 	FTimerHandle ChangeStageTimer;
 	FTimerHandle EnemySpawnTimer;
 
@@ -49,7 +51,6 @@ protected:
 	FRandomStream Random;
 
 public:	
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
 	TArray<FEnemySpawnInfo> SpawnStages;
 

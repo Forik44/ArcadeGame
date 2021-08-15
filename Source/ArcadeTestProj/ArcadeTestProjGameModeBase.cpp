@@ -29,7 +29,10 @@ void AArcadeTestProjGameModeBase::ExplodePawn_Implementation()
 
 	HealtsComponents->ChangeHealths(-1);
 
-	GetWorld()->GetTimerManager().SetTimer(RecoverTimer, this, &AArcadeTestProjGameModeBase::RecoverPawn, PlayerRecoverTime, false);
+	if (!IsGameOver)
+	{
+		GetWorld()->GetTimerManager().SetTimer(RecoverTimer, this, &AArcadeTestProjGameModeBase::RecoverPawn, PlayerRecoverTime, false);
+	}
 }
 
 void AArcadeTestProjGameModeBase::RecoverPawn_Implementation()
@@ -39,7 +42,13 @@ void AArcadeTestProjGameModeBase::RecoverPawn_Implementation()
 
 void AArcadeTestProjGameModeBase::EndGame()
 {
+	IsGameOver = true;
+
+	EnemySpawnComponent->SetActive(false);
+
 	GameOver.Broadcast();
+
+	UGameplayStatics::GetPlayerPawn(this, 0)->Destroy();
 
 	UE_LOG(LogTemp, Log, TEXT("Game Over"));
 }

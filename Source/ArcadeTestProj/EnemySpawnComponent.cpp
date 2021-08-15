@@ -3,6 +3,14 @@
 #include "TimerManager.h"
 
 
+void UEnemySpawnComponent::Deactivate()
+{
+	Super::Deactivate();
+
+	GetWorld()->GetTimerManager().ClearTimer(ChangeStageTimer);
+	GetWorld()->GetTimerManager().ClearTimer(EnemySpawnTimer);
+}
+
 void UEnemySpawnComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -41,6 +49,7 @@ void UEnemySpawnComponent::SpawnEnemy()
 		GetWorld()->GetTimerManager().SetTimer(EnemySpawnTimer, this, &UEnemySpawnComponent::SpawnEnemy, SpawnStage.SpawnDelay, false);
 	}
 }
+
 
 
 
