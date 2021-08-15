@@ -8,6 +8,7 @@
 #include "ShootProjectile.h"
 #include "PlayerPawnCPP.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPawnDamagedEvent);
 
 UCLASS()
 class ARCADETESTPROJ_API APlayerPawnCPP : public APawn
@@ -30,21 +31,8 @@ protected:
 	APlayerController* PlayerController;
 	virtual void PossessedBy(AController* NewController) override;
 
-	UFUNCTION(BlueprintNativeEvent, Category = "Healths")
-	bool CanBeDamagedBP();
-	bool CanBeDamagedBP_Implementation();
-
-	UFUNCTION(BlueprintNativeEvent, Category = "Healths")
-	void ExplodePawn();
-	void ExplodePawn_Implementation();
-
-	UFUNCTION(BlueprintNativeEvent, Category = "Healths")	
-	void RecoverPawn();
-	void RecoverPawn_Implementation();
-
 	FVector2D MoveLimit;
 
-	FTimerHandle RecoverTimer;
 private:
 
 	FVector2D TouchLocation;
@@ -75,8 +63,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Controls")
 	float TouchMoveSensability;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Controls")
-	float RecoverTime;
+	UPROPERTY(BlueprintAssignable, Category = "Healths")
+	FPawnDamagedEvent PawnDamaged; 
+
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent, Category = "Healths")
+	bool CanBeDamagedBP();
+	bool CanBeDamagedBP_Implementation();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Healths")
+	void ExplodePawn();
+	void ExplodePawn_Implementation();
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Healths")
+	void RecoverPawn();
+	void RecoverPawn_Implementation();
 
 	void IgnoreProjectile(AShootProjectile* Projectile);
 

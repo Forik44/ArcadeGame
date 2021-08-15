@@ -7,8 +7,6 @@
 
 
 APlayerPawnCPP::APlayerPawnCPP()
-	:
-	RecoverTime(2)
 {
 	TouchMoveSensability = 1.f;
 	MoveLimit.X = 500.f; MoveLimit.Y = 600.f;
@@ -49,7 +47,6 @@ void APlayerPawnCPP::ExplodePawn_Implementation()
 
 	ShootComponent->StopShooting();
 
-	GetWorld()->GetTimerManager().SetTimer(RecoverTimer, this, &APlayerPawnCPP::RecoverPawn, RecoverTime, false);
 }
 
 void APlayerPawnCPP::BeginPlay()
@@ -61,8 +58,13 @@ void APlayerPawnCPP::BeginPlay()
 
 float APlayerPawnCPP::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	ExplodePawn();
+	if (!CanBeDamagedBP())
+	{
+		return 0.f;
+	}
+
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	PawnDamaged.Broadcast();
 	return DamageAmount;
 }
 
