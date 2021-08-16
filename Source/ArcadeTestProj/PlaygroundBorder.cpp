@@ -2,26 +2,25 @@
 
 
 #include "PlaygroundBorder.h"
-
+#include "PlayerPawnCPP.h"
 // Sets default values
 APlaygroundBorder::APlaygroundBorder()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
+	Trigger = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger"));
+	SetRootComponent(Trigger);
+	Trigger->SetCollisionProfileName("OverlapAll");
 }
 
-// Called when the game starts or when spawned
-void APlaygroundBorder::BeginPlay()
+void APlaygroundBorder::NotifyActorEndOverlap(AActor* OtherActor)
 {
-	Super::BeginPlay();
-	
+	Super::NotifyActorEndOverlap(OtherActor);
+	if (!OtherActor)
+	{
+		return; 
+	}
+	if (Cast<APlayerPawnCPP>(OtherActor))
+	{
+		return;
+	}
+	OtherActor->Destroy();
 }
-
-// Called every frame
-void APlaygroundBorder::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-

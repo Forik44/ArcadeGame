@@ -47,5 +47,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	UHealthComponent* HealthComponent;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pawn")
+	int DestroyPoints;
+
 	void IgnoreProjectile(AShootProjectile* Projectile, AActor* Owner);
 };

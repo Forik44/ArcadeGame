@@ -39,6 +39,10 @@ void AShootProjectile::BeginPlay()
 
 void AShootProjectile::OnProjectileOverlap(UPrimitiveComponent* OpelappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 BodyIndex, bool Sweep, const FHitResult& Hit)
 {
+	if (OtherActor && !Cast<APawn>(OtherActor))//if no overlapped actor ot it is not pawn
+	{
+		return;
+	}
 	if (!GetOwner())
 	{
 		return;

@@ -45,12 +45,20 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Game")
 	FGameOverEvent GameOver;
 
-	UFUNCTION(BlueprintCallable, Category = "Game")
-	void EndGame();
-
 	UPROPERTY(BlueprintReadWrite, Category = "Game")
 	float PlayerRecoverTime;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Game")
 	class APlayerPawnCPP* PlayerPawn;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Game")
+	int GamePoints;
+
+	UFUNCTION(BlueprintCallable, Category = "Game")
+	void EndGame();
+
+	UFUNCTION(BlueprintCallable, Category = "Game")
+	void AddPoints(int Points);
+
+
 };

@@ -53,3 +53,8 @@ void AArcadeTestProjGameModeBase::EndGame()
 	UE_LOG(LogTemp, Log, TEXT("Game Over"));
 }
 
+void AArcadeTestProjGameModeBase::AddPoints(int Points)
+{
+	GamePoints += Points;
+}
+
