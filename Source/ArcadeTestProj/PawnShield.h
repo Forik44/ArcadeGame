@@ -6,21 +6,31 @@
 #include "GameFramework/Actor.h"
 #include "PawnShield.generated.h"
 
+class APlayerPawnCPP;
+
 UCLASS()
 class ARCADETESTPROJ_API APawnShield : public AActor
 {
 	GENERATED_BODY()
+
+protected:
+
+	FTimerHandle ShieldTimer;
+
+	class APlayerPawnCPP* PawnForShield;
 	
 public:	
 	// Sets default values for this actor's properties
 	APawnShield();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UFUNCTION(BlueprintCallable, Category = "Shield")
+	void ActivateShield(APlayerPawnCPP* PlayerPawn);
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION(BlueprintCallable, Category = "Shield")
+	void DeactivateShield();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Shield")
+	float ShieldPeriod;
+
 
 };

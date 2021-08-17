@@ -2,26 +2,55 @@
 
 
 #include "Bonus.h"
-
+#include "Components/StaticMeshComponent.h"
+#include "Components/SphereComponent.h"
+#include "PlayerPawnCPP.h"
 // Sets default values
 ABonus::ABonus()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("BonusCollision"));
+	SetRootComponent(Collision);
+
+	Collision->SetCollisionObjectType(ECC_WorldDynamic);
+	Collision->SetCollisionResponseToAllChannels(ECR_Ignore);
+	Collision->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+
+	Collision->SetSphereRadius(50);
+
 }
 
-// Called when the game starts or when spawned
-void ABonus::BeginPlay()
+void ABonus::BonusCollected_Implementation()
 {
-	Super::BeginPlay();
-	
+	Destroy();
 }
 
-// Called every frame
+void ABonus::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+
+	if (!OtherActor)
+	{
+		return;
+	}
+	if (!Cast<APlayerPawnCPP>(OtherActor))
+	{
+		return;
+	}
+
+	BonusCollected();
+
+}
+
 void ABonus::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	float WorldMoveOffset = -200.f * DeltaTime;
+	AddActorWorldOffset(FVector(WorldMoveOffset, 0.f, 0.f));
+
 }
+
+
 

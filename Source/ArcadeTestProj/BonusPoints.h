@@ -13,5 +13,12 @@ UCLASS()
 class ARCADETESTPROJ_API ABonusPoints : public ABonus
 {
 	GENERATED_BODY()
-	
+protected:
+
+	virtual void BonusCollected_Implementation() override;
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bonus")
+	int Points;
 };

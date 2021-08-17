@@ -1,27 +1,43 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "PawnShield.h"
+#include "PlayerPawnCPP.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
-// Sets default values
 APawnShield::APawnShield()
+	:
+	ShieldPeriod(4)
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+ 
 
 }
 
-// Called when the game starts or when spawned
-void APawnShield::BeginPlay()
+void APawnShield::ActivateShield(APlayerPawnCPP* PlayerPawn)
 {
-	Super::BeginPlay();
-	
+	if (!PlayerPawn)
+	{
+		Destroy();
+		return;
+	}
+	PawnForShield = PlayerPawn;
+	PawnForShield->SetCanBeDamaged(false);
+	FAttachmentTransformRules AttachRules = FAttachmentTransformRules(
+		EAttachmentRule::SnapToTarget,
+		EAttachmentRule::SnapToTarget,
+		EAttachmentRule::KeepWorld,
+		false);
+	AttachToActor(PlayerPawn, AttachRules);
+
+	GetWorld()->GetTimerManager().SetTimer(ShieldTimer, this, &APawnShield::DeactivateShield, ShieldPeriod, false);
 }
 
-// Called every frame
-void APawnShield::Tick(float DeltaTime)
+void APawnShield::DeactivateShield()
 {
-	Super::Tick(DeltaTime);
+	if (!PawnForShield)
+	{
+		return;
+	}
 
+	PawnForShield->SetCanBeDamaged(true);
+
+	Destroy();
 }
-
