@@ -14,16 +14,16 @@ struct FShootInfo
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-		FVector Offset;
+	FVector Offset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-		float Angle;
+	float Angle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-		TSubclassOf<AShootProjectile> ProjectileClass;
+	TSubclassOf<AShootProjectile> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-		float Damage;
+	float Damage;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

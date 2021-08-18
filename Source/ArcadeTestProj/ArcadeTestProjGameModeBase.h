@@ -10,9 +10,23 @@
 #include "TimerManager.h"
 #include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
+#include "ShootComponent.h"
 #include "ArcadeTestProjGameModeBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameOverEvent);
+
+USTRUCT(BlueprintType)
+struct FShootInfoLevel
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
+	TArray<FShootInfo> ShootInfos;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
+	float ShootPeriod;
+};
 
 UCLASS()
 class ARCADETESTPROJ_API AArcadeTestProjGameModeBase : public AGameModeBase
@@ -35,6 +49,17 @@ protected:
 
 	bool IsGameOver;
 public:
+	UPROPERTY(BlueprintReadOnly, Category = "Shooting")
+	int CurrentShootLevel;
+
+	UFUNCTION(BlueprintCallable, Category = "Game")
+	void EndGame();
+
+	UFUNCTION(BlueprintCallable, Category = "Game")
+	void AddPoints(int Points);
+
+	UFUNCTION(BlueprintCallable, Category = "Game")
+	bool ChangeShootLevel(bool Up);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemies")
 	UEnemySpawnComponent* EnemySpawnComponent;
@@ -54,11 +79,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Game")
 	int GamePoints;
 
-	UFUNCTION(BlueprintCallable, Category = "Game")
-	void EndGame();
+	UPROPERTY(EditDefaultsOnly, Category = "Shooting")
+	TArray<FShootInfoLevel> ShootInfoLevels;
 
-	UFUNCTION(BlueprintCallable, Category = "Game")
-	void AddPoints(int Points);
 
 
 };

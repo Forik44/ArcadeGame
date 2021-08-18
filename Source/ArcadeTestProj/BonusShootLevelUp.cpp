@@ -2,4 +2,18 @@
 
 
 #include "BonusShootLevelUp.h"
+#include "Kismet/GameplayStatics.h"
+#include "ArcadeTestProjGameModeBase.h"
 
+void ABonusShootLevelUp::BonusCollected_Implementation()
+{
+	AArcadeTestProjGameModeBase* Gamemode = Cast<AArcadeTestProjGameModeBase>(UGameplayStatics::GetGameMode(this));
+	if (!Gamemode)
+	{
+		return;
+	}
+
+	Gamemode->ChangeShootLevel(true);
+
+	Super::BonusCollected_Implementation();
+}

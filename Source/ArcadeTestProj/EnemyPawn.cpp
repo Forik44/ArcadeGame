@@ -7,11 +7,12 @@
 #include "GameFramework/DamageType.h"
 #include "Kismet/GameplayStatics.h"
 #include "ArcadeTestProjGameModeBase.h"
+#include "Engine/World.h"
 // Sets default values
 AEnemyPawn::AEnemyPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = true; 
 
 	PawnCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("PawnCollition"));
 	SetRootComponent(PawnCollision);
@@ -30,18 +31,25 @@ AEnemyPawn::AEnemyPawn()
 void AEnemyPawn::BeginPlay()
 {
 	Super::BeginPlay();
-
-	HealthComponent->OnHealthEnded.AddDynamic(this, &AEnemyPawn::DestroyPawn);
+	Random.GenerateNewSeed();
+	HealthComponent->OnHealthEnded.AddDynamic(this, &AEnemyPawn::KillPawn);
 	OnActorBeginOverlap.AddDynamic(this, &AEnemyPawn::OnEnemyOverlap);
 }
 
-void AEnemyPawn::DestroyPawn()
+void AEnemyPawn::KillPawn()
 {
 	AArcadeTestProjGameModeBase* Gamemode = Cast<AArcadeTestProjGameModeBase>(UGameplayStatics::GetGameMode(this));
 	if (Gamemode)
 	{
 		Gamemode->AddPoints(DestroyPoints);
 	}
+	SpawnBonuses();
+
+	DestroyPawn();
+}
+
+void AEnemyPawn::DestroyPawn()
+{
 	Destroy();
 }
 
@@ -51,13 +59,30 @@ void AEnemyPawn::OnEnemyOverlap(AActor* OverlappedActor, AActor* OtherActor)
 	{
 		return; 
 	}
+	if (!OtherActor->CanBeDamaged())
+	{
+		return;
+	}
 
 	UGameplayStatics::ApplyDamage(OtherActor, 100.f, GetController(), this, UDamageType::StaticClass());
 
 	DestroyPawn(); 
 }
 
-// Called every frame
+void AEnemyPawn::SpawnBonuses()
+{
+	FActorSpawnParameters SpawnParametrs;
+	SpawnParametrs.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	Random.GenerateNewSeed();
+	for (auto Bonus : PossibleBonuses)
+	{
+		if (Random.RandRange(0.f, 100.f) < Bonus.Chance)
+		{
+			GetWorld()->SpawnActor<ABonus>(Bonus.BonusClass, GetActorLocation(), FRotator(), SpawnParametrs);
+		}
+	}
+}
+
 void AEnemyPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -67,12 +92,6 @@ void AEnemyPawn::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void AEnemyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
 
 void AEnemyPawn::IgnoreProjectile(AShootProjectile* Projectile, AActor* PawnOwner)
 {

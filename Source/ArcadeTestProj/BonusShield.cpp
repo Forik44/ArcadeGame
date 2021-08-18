@@ -16,10 +16,11 @@ void ABonusShield::BonusCollected_Implementation()
 	}
 
 	APlayerPawnCPP* PlayerPawn = Cast<APlayerPawnCPP>(Pawn);
-	if (!PlayerPawn)
+	if (!PlayerPawn || !PlayerPawn->CanBeDamaged())
 	{
 		return;
 	}
+	 
 
 	APawnShield* Shield = GetWorld()->SpawnActor<APawnShield>(ShieldClass);
 

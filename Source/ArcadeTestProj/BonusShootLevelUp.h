@@ -13,5 +13,8 @@ UCLASS()
 class ARCADETESTPROJ_API ABonusShootLevelUp : public ABonus
 {
 	GENERATED_BODY()
-	
+
+	virtual void BonusCollected_Implementation() override;
+
+
 };
