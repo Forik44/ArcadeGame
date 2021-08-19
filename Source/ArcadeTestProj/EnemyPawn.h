@@ -69,6 +69,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pawn")
 	int DestroyPoints;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visual")
+	UParticleSystem* DestroyParticle;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Bonus")
 	TArray<FBonusChance> PossibleBonuses;
 

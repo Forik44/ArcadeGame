@@ -36,6 +36,8 @@ void AArcadeTestProjGameModeBase::ExplodePawn_Implementation()
 
 	HealtsComponents->ChangeHealths(-1);
 
+	ChangeShootLevel(false);
+
 	if (!IsGameOver)
 	{
 		GetWorld()->GetTimerManager().SetTimer(RecoverTimer, this, &AArcadeTestProjGameModeBase::RecoverPawn, PlayerRecoverTime, false);
@@ -60,9 +62,19 @@ void AArcadeTestProjGameModeBase::EndGame()
 	SetPause(UGameplayStatics::GetPlayerController(this, 0), false); 
 }
 
+void AArcadeTestProjGameModeBase::IncreaseDifficult()
+{
+	if (GamePoints >= PastGamePointsStage + PointToNewDifficult)
+	{
+		EnemySpawnComponent->ChangeStageTimeMultiplier *= DifficultMultiplier;
+		PastGamePointsStage = PastGamePointsStage + PointToNewDifficult;
+	}
+}
+
 void AArcadeTestProjGameModeBase::AddPoints(int Points)
 {
 	GamePoints += Points;
+	IncreaseDifficult();
 }
 
 bool AArcadeTestProjGameModeBase::ChangeShootLevel(bool Up)

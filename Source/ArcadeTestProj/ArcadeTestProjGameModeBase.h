@@ -45,9 +45,14 @@ protected:
 	void RecoverPawn();
 	void RecoverPawn_Implementation();
 
+	void IncreaseDifficult();
+
 	FTimerHandle RecoverTimer;
 
 	bool IsGameOver;
+
+	int PastGamePointsStage;
+	
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Shooting")
 	int CurrentShootLevel;
@@ -81,6 +86,13 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Shooting")
 	TArray<FShootInfoLevel> ShootInfoLevels;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Difficult")
+	int PointToNewDifficult;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Difficult")
+	float DifficultMultiplier;
+
 
 
 

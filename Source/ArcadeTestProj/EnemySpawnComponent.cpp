@@ -17,7 +17,7 @@ void UEnemySpawnComponent::BeginPlay()
 
 	Random.GenerateNewSeed();
 
-
+	ChangeStageTimeMultiplier = 1;
 	StartSpawnStage();
 	
 }
@@ -32,6 +32,7 @@ void UEnemySpawnComponent::StartSpawnStage()
 	
 	
 	float ChangeStageTime = Random.RandRange(StageMinDelay, StageMaxDelay);
+	ChangeStageTime *= ChangeStageTimeMultiplier;
 	GetWorld()->GetTimerManager().SetTimer(ChangeStageTimer, this, &UEnemySpawnComponent::StartSpawnStage, ChangeStageTime, false);
 
 	

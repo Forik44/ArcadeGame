@@ -71,6 +71,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pawn")
 	UMaterialInterface* RecoverMaterial;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visual")
+	UParticleSystem* DestroyParticle;
+
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent, Category = "Healths")
 	bool CanBeDamagedBP();
 	bool CanBeDamagedBP_Implementation();

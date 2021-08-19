@@ -4,13 +4,14 @@
 #include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
 
 
 
 APlayerPawnCPP::APlayerPawnCPP()
 {
 	TouchMoveSensability = 1.f;
-	MoveLimit.X = 500.f; MoveLimit.Y = 600.f;
+	MoveLimit.X = 500.f; MoveLimit.Y = 700.f;
 	PrimaryActorTick.bCanEverTick = true;
 
 	PawnCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("PawnCollision"));
@@ -50,6 +51,11 @@ void APlayerPawnCPP::ExplodePawn_Implementation()
 	ShootComponent->StopShooting();
 
 	PawnMesh->SetMaterial(0, RecoverMaterial);
+
+	if (DestroyParticle)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyParticle, GetActorTransform(), true);
+	}
 }
 
 void APlayerPawnCPP::BeginPlay()

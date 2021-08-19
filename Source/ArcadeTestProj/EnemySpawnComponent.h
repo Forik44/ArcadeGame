@@ -60,5 +60,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
 	float StageMaxDelay;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
+	float ChangeStageTimeMultiplier;
+
 
 };
