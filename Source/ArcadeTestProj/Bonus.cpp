@@ -5,6 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "PlayerPawnCPP.h"
+#include "Kismet/GameplayStatics.h"
 // Sets default values
 ABonus::ABonus()
 {
@@ -23,6 +24,10 @@ ABonus::ABonus()
 
 void ABonus::BonusCollected_Implementation()
 {
+	if (CollectParticle)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CollectParticle, GetActorTransform(), true);
+	}
 	Destroy();
 }
 

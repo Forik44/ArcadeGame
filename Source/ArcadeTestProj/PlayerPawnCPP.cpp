@@ -5,6 +5,8 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Engine/GameViewportClient.h"
 
 
 
@@ -32,6 +34,16 @@ void APlayerPawnCPP::PossessedBy(AController* NewController)
 	PlayerController = Cast<APlayerController>(NewController);
 }
 
+FVector2D APlayerPawnCPP::GetMoveLimit()
+{
+	return MoveLimit;
+}
+
+void APlayerPawnCPP::SetMoveLimit(FVector2D MoveLimits)
+{
+	MoveLimit = MoveLimits;
+}
+
 bool APlayerPawnCPP::CanBeDamagedBP_Implementation()
 {
 	return CanBeDamaged();
@@ -42,6 +54,18 @@ void APlayerPawnCPP::RecoverPawn_Implementation()
 	ShootComponent->StartShooting();
 	SetActorEnableCollision(true);
 	PawnMesh->SetMaterial(0, PawnMaterial);
+
+	TArray<UParticleSystemComponent*> Components;
+	GetComponents(Components);
+	for (UParticleSystemComponent* Component : Components)
+	{
+		UActorComponent* CastedParticle = Cast<UActorComponent>(Component);
+		if (!CastedParticle)
+		{
+			continue;
+		}
+		CastedParticle->Activate();
+	}
 }
 
 void APlayerPawnCPP::ExplodePawn_Implementation()
@@ -55,6 +79,18 @@ void APlayerPawnCPP::ExplodePawn_Implementation()
 	if (DestroyParticle)
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyParticle, GetActorTransform(), true);
+	}
+
+	TArray<UParticleSystemComponent*> Components;
+	GetComponents(Components);
+	for (UParticleSystemComponent* Component : Components)
+	{
+		UActorComponent* CastedParticle = Cast<UActorComponent>(Component);
+		if (!CastedParticle)
+		{
+			continue;
+		}
+		CastedParticle->Deactivate();
 	}
 }
 
@@ -108,8 +144,46 @@ void APlayerPawnCPP::OnTouchMove(ETouchIndex::Type FingerIndex, FVector Location
 	FVector2D TouchDeltaMove = FVector2D(TouchLocation.X - Location.X, TouchLocation.Y - Location.Y);
 	TouchDeltaMove *= TouchMoveSensability;
 	FVector NewLocation = GetActorLocation();
-	NewLocation.X = FMath::Clamp(NewLocation.X + TouchDeltaMove.Y, -MoveLimit.Y, MoveLimit.Y);
-	NewLocation.Y = FMath::Clamp(NewLocation.Y + TouchDeltaMove.X * -1.0f, -MoveLimit.X, MoveLimit.X);
+
+	FVector2D ScreenPosition;
+	APlayerController* PlayerController1 = UGameplayStatics::GetPlayerController(this, 0);
+	UGameplayStatics::ProjectWorldToScreen(PlayerController1, NewLocation, ScreenPosition);
+	
+	FVector2D ViewportSize;
+	int SizeX, SizeY;
+	PlayerController->GetViewportSize(SizeX, SizeY);
+	ViewportSize.X = (float)SizeX;
+	ViewportSize.Y = (float)SizeY;
+	bool IsAngle = false;
+
+	if (ScreenPosition.X > ViewportSize.X-30)
+	{
+		UE_LOG(LogTemp, Log, TEXT("1"));
+		TouchDeltaMove.X = FMath::Clamp(TouchDeltaMove.X, 0.f, 10000.f);
+	}
+	if (ScreenPosition.Y > ViewportSize.Y-25)
+	{
+		UE_LOG(LogTemp, Log, TEXT("2"));
+		TouchDeltaMove.Y = FMath::Clamp(TouchDeltaMove.Y, 0.f, 10000.f);
+	}
+	if (ScreenPosition.X < 25)
+	{
+		UE_LOG(LogTemp, Log, TEXT("3"));
+		TouchDeltaMove.X = FMath::Clamp(TouchDeltaMove.X, -10000.f, 0.f);
+	}
+	if (ScreenPosition.Y < 30)
+	{
+		UE_LOG(LogTemp, Log, TEXT("4"));
+		TouchDeltaMove.Y = FMath::Clamp(TouchDeltaMove.Y, -10000.f, 0.f);
+	
+	}
+
+
+	NewLocation.X = NewLocation.X + TouchDeltaMove.Y;
+	NewLocation.Y = NewLocation.Y + TouchDeltaMove.X * -1.0f;
+	
+
+	
 
 	SetActorLocation(NewLocation);
 

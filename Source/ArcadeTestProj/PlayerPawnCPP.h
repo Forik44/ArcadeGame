@@ -74,6 +74,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Visual")
 	UParticleSystem* DestroyParticle;
 
+	UFUNCTION(BlueprintCallable, Category = "GameSettings")
+	FVector2D GetMoveLimit();
+
+	UFUNCTION(BlueprintCallable, Category = "GameSettings")
+	void SetMoveLimit(FVector2D MoveLimits);
+
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent, Category = "Healths")
 	bool CanBeDamagedBP();
 	bool CanBeDamagedBP_Implementation();

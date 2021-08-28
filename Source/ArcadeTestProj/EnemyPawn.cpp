@@ -50,6 +50,10 @@ void AEnemyPawn::KillPawn()
 
 void AEnemyPawn::DestroyPawn()
 {
+	if (DestroyParticle)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyParticle, GetActorTransform(), true);
+	}
 	Destroy();
 }
 
@@ -74,11 +78,13 @@ void AEnemyPawn::SpawnBonuses()
 	FActorSpawnParameters SpawnParametrs;
 	SpawnParametrs.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	Random.GenerateNewSeed();
+	bool IsBonusSpawned = true;
 	for (auto Bonus : PossibleBonuses)
 	{
-		if (Random.RandRange(0.f, 100.f) < Bonus.Chance)
+		if (Random.RandRange(0.f, 100.f) < Bonus.Chance && !IsBonusSpawned)
 		{
-			GetWorld()->SpawnActor<ABonus>(Bonus.BonusClass, GetActorLocation(), FRotator(), SpawnParametrs);
+			GetWorld()->SpawnActor<ABonus>(Bonus.BonusClass, GetActorLocation(), FRotator(0,0,0), SpawnParametrs);
+			IsBonusSpawned = false;
 		}
 	}
 }

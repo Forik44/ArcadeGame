@@ -14,4 +14,7 @@ class ARCADETESTPROJ_API USave : public USaveGame
 {
 	GENERATED_BODY()
 	
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Leaderboard")
+	int RecordScore;
 };

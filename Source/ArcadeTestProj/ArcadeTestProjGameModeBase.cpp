@@ -3,6 +3,7 @@
 
 #include "ArcadeTestProjGameModeBase.h"
 #include "PlayerPawnCPP.h"
+#include "Save.h"
 
 AArcadeTestProjGameModeBase::AArcadeTestProjGameModeBase()
 	:
@@ -36,8 +37,6 @@ void AArcadeTestProjGameModeBase::ExplodePawn_Implementation()
 
 	HealtsComponents->ChangeHealths(-1);
 
-	ChangeShootLevel(false);
-
 	if (!IsGameOver)
 	{
 		GetWorld()->GetTimerManager().SetTimer(RecoverTimer, this, &AArcadeTestProjGameModeBase::RecoverPawn, PlayerRecoverTime, false);
@@ -55,11 +54,22 @@ void AArcadeTestProjGameModeBase::EndGame()
 
 	EnemySpawnComponent->SetActive(false);
 
+	if (!UGameplayStatics::DoesSaveGameExist(FString::FromInt(1), 0))
+	{
+		USaveGame* SaveGame = UGameplayStatics::CreateSaveGameObject(USave::StaticClass());
+		USave* Save = Cast<USave>(SaveGame);
+		if (GamePoints > Save->RecordScore)
+		{
+			Save->RecordScore = GamePoints;
+			UGameplayStatics::SaveGameToSlot(Save, FString::FromInt(1), 0);
+		}
+	}
+
 	GameOver.Broadcast();
 
 	UGameplayStatics::GetPlayerPawn(this, 0)->Destroy();
 
-	SetPause(UGameplayStatics::GetPlayerController(this, 0), false); 
+	SetPause(UGameplayStatics::GetPlayerController(this, 0)); 
 }
 
 void AArcadeTestProjGameModeBase::IncreaseDifficult()
